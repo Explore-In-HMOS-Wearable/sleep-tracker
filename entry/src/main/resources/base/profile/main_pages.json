@@ -1,0 +1,13 @@
+{
+  "src": [
+    "pages/Index",
+    "pages/SetAlarm",
+    "pages/AlarmWatcher",
+    "pages/SleepEfficiency",
+    "pages/Result",
+    "pages/ResultDuration",
+    "pages/ResultWakeCount",
+    "pages/ResultRem",
+    "pages/FeaturesList"
+  ]
+}
