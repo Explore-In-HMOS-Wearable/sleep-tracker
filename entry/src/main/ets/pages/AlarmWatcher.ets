@@ -5,19 +5,18 @@ import {
   ArcButtonStatus,
   ArcButtonStyleMode,
   ColorMetrics,
-  router
 } from '@kit.ArkUI';
 import { AlarmService } from '../service/AlarmService'
 import { vibrator } from '@kit.SensorServiceKit'
 import { BusinessError } from '@kit.BasicServicesKit'
 
-@Entry
 @Component
-struct AlarmWatcher {
+export struct AlarmWatcher {
   bottomOptions: ArcButtonOptions = new ArcButtonOptions({})
   @State alarmTime: string = 'Loading...'
   @State currentTime: string = ''
   private intervalId: number = -1
+  @Consume('NavPathStack') pageStack: NavPathStack;
 
   aboutToAppear() {
     this.bottomOptions = new ArcButtonOptions({
@@ -31,7 +30,7 @@ struct AlarmWatcher {
         AlarmService.clearAlarm()
         clearInterval(this.intervalId)
         this.stopVibrate()
-        router.pushUrl({ url: 'pages/SleepEfficiency' });
+        this.pageStack.pushPathByName('SleepEfficiency', null);
       }
     });
 
@@ -102,36 +101,40 @@ struct AlarmWatcher {
   }
 
   build() {
-    Flex({
-      justifyContent: FlexAlign.Center,
-      alignItems: ItemAlign.Center
-    }) {
-      Row() {
-        Column() {
-          Image($r('app.media.sleeping'))
-            .width('48%')
+    NavDestination(){
+      Flex({
+        justifyContent: FlexAlign.Center,
+        alignItems: ItemAlign.Center
+      }) {
+        Row() {
+          Column() {
+            Image($r('app.media.sleeping'))
+              .width('48%')
+              .backgroundColor('#205375')
+              .padding(5)
+              .borderRadius(100)
+              .margin({ top: 15 })
+
+            Row() {
+              Image($r('app.media.alarm_icon')).width('11%')
+              Text(`Alarm set: ${this.alarmTime}`)
+                .fontColor('#ffffff')
+                .fontSize(16)
+            }
             .backgroundColor('#205375')
+            .margin({ top: 10, bottom: 8 })
             .padding(5)
-            .borderRadius(100)
-            .margin({ top: 15 })
+            .borderRadius(90)
 
-          Row() {
-            Image($r("app.media.alarm_icon")).width('11%')
-            Text(`Alarm set: ${this.alarmTime}`)
-              .fontColor('#ffffff')
-              .fontSize(16)
+            ArcButton({ options: this.bottomOptions })
           }
-          .backgroundColor('#205375')
-          .margin({ top: 10, bottom: 8 })
-          .padding(5)
-          .borderRadius(90)
-
-          ArcButton({ options: this.bottomOptions })
         }
       }
+      .width('100%')
+      .height('100%')
+      .backgroundColor('#112B3C')
     }
-    .width('100%')
-    .height('100%')
-    .backgroundColor('#112B3C')
+    .hideTitleBar(true)
+    .hideBackButton(true)
   }
 }

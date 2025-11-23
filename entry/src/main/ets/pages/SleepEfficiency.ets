@@ -5,14 +5,13 @@ import {
   ArcButtonStatus,
   ArcButtonStyleMode,
   ColorMetrics,
-  router
 } from '@kit.ArkUI';
-@Entry
+
 @Component
-struct SleepEfficiency {
+export struct SleepEfficiency {
+  @Consume('NavPathStack') pageStack: NavPathStack;
+
   bottomOptions: ArcButtonOptions = new ArcButtonOptions({})
-  private gradientColor: LinearGradient = new LinearGradient([{ color: Color.Yellow, offset: 0.5 },
-    { color: Color.Orange, offset: 1.0 }])
   aboutToAppear() {
     this.bottomOptions = new ArcButtonOptions({
       label: 'Next',
@@ -22,32 +21,35 @@ struct SleepEfficiency {
       styleMode: ArcButtonStyleMode.CUSTOM,
       position: ArcButtonPosition.BOTTOM_EDGE,
       onClick: () => {
-        router.pushUrl({ url: 'pages/ResultDuration' });
+        this.pageStack.pushPathByName('ResultDuration', null);
       }
     });
   }
   build() {
-    Flex({justifyContent: FlexAlign.Center}){
-      Row(){
-        Column(){
-          Stack() {
-            Progress({ value: 58, total: 100, type: ProgressType.Ring })
-              .width(180)
-              .height(180)
-              .color(Color.Orange)
-              .style({ strokeWidth: 15, shadow: true, enableScanEffect: true })
-
-            Text('Sleep Efficiency:\n 58%')
-              .fontColor('#FFFFFF')
-              .fontSize(14)
-              .fontWeight(FontWeight.Bold)
+    NavDestination(){
+      Flex({justifyContent: FlexAlign.Center}){
+        Row(){
+          Column(){
+            Stack() {
+              Progress({ value: 58, total: 100, type: ProgressType.Ring })
+                .width(180)
+                .height(180)
+                .color(Color.Orange)
+                .style({ strokeWidth: 15, shadow: true, enableScanEffect: true })
+              Text('Sleep Efficiency:\n 58%')
+                .fontColor('#FFFFFF')
+                .fontSize(14)
+                .fontWeight(FontWeight.Bold)
+            }
+            ArcButton({ options: this.bottomOptions })
           }
-          ArcButton({ options: this.bottomOptions })
         }
+        .height('100%')
       }
-      .height('100%')
+      .width('100%')
+      .backgroundColor('#112B3C')
     }
-    .width('100%')
-    .backgroundColor('#112B3C')
+    .hideTitleBar(true)
+    .hideBackButton(true)
   }
 }

@@ -1,4 +1,3 @@
-//this page shows onBedDuration and sleep duration
 import {
   ArcButton,
   ArcButtonOptions,
@@ -6,12 +5,12 @@ import {
   ArcButtonStatus,
   ArcButtonStyleMode,
   ColorMetrics,
-  router
 } from '@kit.ArkUI';
 
-@Entry
 @Component
-struct ResultDuration {
+export struct ResultDuration {
+  @Consume('NavPathStack') pageStack: NavPathStack;
+
   bottomOptions: ArcButtonOptions = new ArcButtonOptions({})
   aboutToAppear() {
     this.bottomOptions = new ArcButtonOptions({
@@ -22,15 +21,16 @@ struct ResultDuration {
       styleMode: ArcButtonStyleMode.CUSTOM,
       position: ArcButtonPosition.BOTTOM_EDGE,
       onClick: () => {
-        router.pushUrl({ url: 'pages/ResultWakeCount' });
+        this.pageStack.pushPathByName('ResultWakeCount', null);
       }
     });
   }
   build() {
-    Flex({justifyContent: FlexAlign.Center, alignContent: FlexAlign.Center}){
-      Row(){
-        Column(){
-          Text("In Bed: 7 hours").margin({bottom: 5, top: 34})
+    NavDestination(){
+      Flex({justifyContent: FlexAlign.Center, alignContent: FlexAlign.Center}){
+        Row(){
+          Column(){
+            Text('In Bed: 7 hours').margin({bottom: 5, top: 34})
             Progress({ value: 7, total: 24, type: ProgressType.Capsule }).width('75%').color(Color.Orange)
               .style({
                 borderColor: Color.Orange,
@@ -55,13 +55,16 @@ struct ResultDuration {
                 enableSmoothEffect: true,
               })
               .privacySensitive(true)
-            Text("In Sleep: 6.5 hours").margin({top: 5, bottom: 30})
+            Text('In Sleep: 6.5 hours').margin({top: 5, bottom: 30})
             ArcButton({ options: this.bottomOptions })
           }
-        .width('100%')
+          .width('100%')
+        }
+        .height('100%')
       }
-      .height('100%')
+      .backgroundColor('#112B3C')
     }
-    .backgroundColor('#112B3C')
+    .hideTitleBar(true)
+    .hideBackButton(true)
   }
 }

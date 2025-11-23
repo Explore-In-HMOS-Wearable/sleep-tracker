@@ -5,18 +5,17 @@ import {
   ArcButtonStatus,
   ArcButtonStyleMode,
   ColorMetrics,
-  router
 } from '@kit.ArkUI';
 import { AlarmService } from '../service/AlarmService'
 
-@Entry
 @Component
-struct SetAlarm {
+export struct SetAlarm {
   bottomOptions: ArcButtonOptions = new ArcButtonOptions({})
   @State today: number = new Date().getDate()
   @State month: number = new Date().getMonth()
   @State year: number = new Date().getFullYear()
   @State selectedTime: Date = new Date()
+  @Consume('NavPathStack') pageStack: NavPathStack;
 
   aboutToAppear() {
     const day = String(this.today).padStart(2, '0');
@@ -33,34 +32,37 @@ struct SetAlarm {
       position: ArcButtonPosition.BOTTOM_EDGE,
       onClick: () => {
         AlarmService.setAlarm(this.selectedTime);
-        router.pushUrl({url: 'pages/AlarmWatcher'});
+        this.pageStack.pushPathByName('AlarmWatcher', null);
       }
     });
   }
 
   build() {
-    Flex({
-      justifyContent: FlexAlign.Center,
-      direction: FlexDirection.Column,
-      alignItems: ItemAlign.Center
-    }) {
-      TimePicker({
-        selected: this.selectedTime
-      })
-        .disappearTextStyle({ color: '#004aaf', font: { size: 18, weight: FontWeight.Lighter } })
-        .textStyle({ color: Color.White, font: { size: 18, weight: FontWeight.Normal } })
-        .selectedTextStyle({ color: '#EFEFEF', font: { size: 20, weight: FontWeight.Bolder } })
-        .backgroundColor('#112B3C')
-        .onChange((value: TimePickerResult) => {
-          if (value.hour >= 0) {
-            this.selectedTime.setHours(value.hour, value.minute)
-          }
+    NavDestination(){
+      Flex({
+        justifyContent: FlexAlign.Center,
+        direction: FlexDirection.Column,
+        alignItems: ItemAlign.Center
+      }) {
+        TimePicker({
+          selected: this.selectedTime
         })
-
-      ArcButton({ options: this.bottomOptions })
+          .disappearTextStyle({ color: '#004aaf', font: { size: 18, weight: FontWeight.Lighter } })
+          .textStyle({ color: Color.White, font: { size: 18, weight: FontWeight.Normal } })
+          .selectedTextStyle({ color: '#EFEFEF', font: { size: 20, weight: FontWeight.Bolder } })
+          .backgroundColor('#112B3C')
+          .onChange((value: TimePickerResult) => {
+            if (value.hour >= 0) {
+              this.selectedTime.setHours(value.hour, value.minute)
+            }
+          })
+        ArcButton({ options: this.bottomOptions })
+      }
+      .width('100%')
+      .height('100%')
+      .backgroundColor('#112B3C')
     }
-    .width('100%')
-    .height('100%')
-    .backgroundColor('#112B3C')
+    .hideTitleBar(true)
+    .hideBackButton(true)
   }
 }
